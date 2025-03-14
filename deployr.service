@@ -1,0 +1,11 @@
+[Unit]
+Description=Infisical Secrets Sync Service
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/deployr.sh
+
+[Install]
+WantedBy=multi-user.target
+

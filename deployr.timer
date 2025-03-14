@@ -1,0 +1,9 @@
+[Unit]
+Description=Run Infisical Secrets Sync periodically
+
+[Timer]
+OnBootSec=3min
+OnUnitActiveSec=3m
+
+[Install]
+WantedBy=timers.target
