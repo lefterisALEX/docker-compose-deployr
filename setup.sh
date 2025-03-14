@@ -13,7 +13,7 @@ echo "Copying $DEPLOYR_SCRIPT to $TARGET_SCRIPT"
 sudo cp "$DEPLOYR_SCRIPT" "$TARGET_SCRIPT"
 
 echo "Copying $DEPLOYR_SERVICE to $TARGET_SERVICE"
-sudo cp "./systemd/DEPLOYR_SERVICE" "$TARGET_SERVICE"
+sudo cp "./systemd/$DEPLOYR_SERVICE" "$TARGET_SERVICE"
 
 echo "Copying $DEPLOYR_TIMER to $TARGET_TIMER"
 sudo cp "./systemd/$DEPLOYR_TIMER" "$TARGET_TIMER"
