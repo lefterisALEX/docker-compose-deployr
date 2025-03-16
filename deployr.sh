@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Load environment variables from .env file
-if [ -f "/root/deployr/.env" ]; then
-  source /root/deployr/.env
+if [ -f "~/.deployr/.env" ]; then
+  source ~/.deployr/.env
 else
   echo "Error: .env file not found"
   exit 1
