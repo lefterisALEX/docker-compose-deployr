@@ -53,7 +53,7 @@ update_and_apply_code() {
   if [ "$(git rev-list HEAD...origin/main --count)" -gt 0 ]; then
     echo "New commits found. Pulling changes..."
     git pull origin main
-    docker-compose -f "$BASE_DIR/docker-compose.yaml" up -d
+    docker compose -f "$BASE_DIR/docker-compose.yaml" up -d
   else
     echo "No new commits found."
   fi

@@ -1,5 +1,5 @@
 [Unit]
-Description=Infisical Secrets Sync Service
+Description=Deployr Sync Service
 After=network.target
 
 [Service]
