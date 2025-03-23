@@ -1,6 +1,9 @@
 #!/bin/bash
 
-# Load environment variables from .env file
+# This script checks for new commits in the upstream repository and runs Docker Compose.
+# Configuration can be overridden in ~/.deployr/.env.
+# If CLIENT_ID, CLIENT_SECRET, and PROJECT_ID are set, it pulls secrets from Infisical for the same path structure as your project.
+
 if [ -f ~/.deployr/.env ]; then
   source ~/.deployr/.env
 else
@@ -8,15 +11,16 @@ else
   exit 1
 fi
 
-# Set default value for INFISICAL_API_URL if not set
 INFISICAL_API_URL="${INFISICAL_API_URL:-https://app.infisical.com}"
-
+DOCKER_COMPOSE_PATH="${DOCKER_COMPOSE_PATH:-.}"
+ROOT_SECRETS_FILENAME="${ROOT_SECRETS_FILENAME:-.env}"
+SUBDIR_SECRETS_FILENAME="${SUBDIR_SECRETS_FILENAME:-.env}"
 BASE_DIR="/root/deployr/$DOCKER_COMPOSE_PATH"
+
 cd "$BASE_DIR" || exit 1
 
 fetch_infisical_secrets() {
 
-  # Check if required variables are set
   if [[ -z "$CLIENT_ID" || -z "$CLIENT_SECRET" || -z "$PROJECT_ID" ]]; then
     echo "Skipping Infisical secret fetch: Missing CLIENT_ID, CLIENT_SECRET, or PROJECT_ID"
     return
@@ -27,13 +31,12 @@ fetch_infisical_secrets() {
 
 
   echo "Fetching root secrets..."
-  infisical export --env=prod --projectId="$PROJECT_ID" --domain "$INFISICAL_API_URL" > ".secrets"
+  infisical export --env=prod --projectId="$PROJECT_ID" --domain "$INFISICAL_API_URL" > "$ROOT_SECRETS_FILENAME"
 
-  # Iterate through subdirectories and fetch secrets
   for dir in */; do
     if [ -d "$dir" ]; then
       echo "Processing directory: $dir"
-      infisical export --env=prod --path="/$dir" --projectId="$PROJECT_ID" --domain "$INFISICAL_API_URL" > "$dir/.secrets"
+      infisical export --env=prod --path="/$dir" --projectId="$PROJECT_ID" --domain "$INFISICAL_API_URL" > "$dir/$SUBDIR_SECRETS_FILENAME"
 
       if [ $? -eq 0 ]; then
         echo "Export successful for directory: $dir"
@@ -46,7 +49,6 @@ fetch_infisical_secrets() {
   done
 }
 
-# Function to fetch new code and restart services if needed
 update_and_apply_code() {
   git fetch
 
@@ -59,7 +61,6 @@ update_and_apply_code() {
   fi
 }
 
-# Execute functions
 fetch_infisical_secrets
 update_and_apply_code
 
