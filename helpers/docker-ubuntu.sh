@@ -15,6 +15,6 @@ sudo apt-get update
 
 sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
 
-sudo docker swarm init
+sudo docker swarm init --advertise-addr enp7s0
 
 sudo service docker start
